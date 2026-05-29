@@ -6,7 +6,7 @@ import { Modal } from '~/components/layout/Modal'
 import { CalcPokemonStatsProvider } from '~/context/CalcPokemonStatsContext'
 import { useCalc } from '~/hooks/calc/useCalc'
 import { useExpandedCalc } from '~/hooks/calc/useExpandedCalc'
-import { useSpeciesAbilities } from '~/hooks/useSpeciesAbilities'
+import { useSpeciesAbilities } from '~/hooks/api/data'
 import type { ChampionsPokemon } from '~/types'
 
 const pokemonIconClass =
@@ -25,7 +25,9 @@ export const CalcModal = () => {
   const { expandedId, setExpandedId } = useExpandedCalc()
   const isOpen = expandedId === calc.id
 
-  const opponentAbilities = useSpeciesAbilities(calc.opponent.species)
+  const { speciesAbilities: opponentAbilities } = useSpeciesAbilities(
+    calc.opponent.species,
+  )
 
   const topSide = mode === 'offensive' ? 'player' : 'opponent'
   const bottomSide = mode === 'offensive' ? 'opponent' : 'player'
@@ -55,7 +57,7 @@ export const CalcModal = () => {
       <CalcPokemonStatsProvider
         value={{
           pokemon: calc.opponent,
-          speciesAbilities: opponentAbilities,
+          speciesAbilities: opponentAbilities ?? [],
           compact: true,
           label: 'Text-to-Pokémon',
           name: calc.name,
