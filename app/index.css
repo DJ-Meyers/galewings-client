@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #001428;
+  --color-surface: #002040;
+  --color-surface-hover: #003060;
+  --color-text: #e8edf2;
+  --color-text-muted: #8ea8c4;
+  --color-primary: #ff8c00;
+  --color-primary-hover: #ff7000;
+  --color-accent: #ff4500;
+  --color-error: #d43030;
+  --breakpoint-md: 800px;
+  --color-border: color-mix(in srgb, var(--color-text-muted) 30%, transparent);
+  --color-border-light: color-mix(
+    in srgb,
+    var(--color-text-muted) 20%,
+    transparent
+  );
+  --color-border-lighter: color-mix(
+    in srgb,
+    var(--color-text-muted) 15%,
+    transparent
+  );
+  --color-border-section: color-mix(
+    in srgb,
+    var(--color-text-muted) 25%,
+    transparent
+  );
+  --color-text-dim: color-mix(in srgb, var(--color-text) 60%, transparent);
+  --color-text-faint: color-mix(in srgb, var(--color-text) 40%, transparent);
+  --color-text-heading: var(--color-text);
+  --color-text-label: color-mix(in srgb, var(--color-text) 80%, transparent);
+  --color-detail-bg: var(--color-surface);
+  --color-hover-bg: var(--color-surface-hover);
+  --color-highlight: var(--color-surface-hover);
+  --color-ko-guaranteed-ohko: #4caf50;
+  --color-ko-chance-ohko: #a3c44a;
+  --color-ko-guaranteed-2hko: #e8d44d;
+  --color-ko-chance-2hko: #e8913a;
+  --color-ko-no-2hko: #e05555;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  color-scheme: dark;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+[data-mode='light'] {
+  --color-bg: #f0f4f8;
+  --color-surface: #ffffff;
+  --color-surface-hover: #dce4ec;
+  --color-text: #001a33;
+  --color-text-muted: #003060;
+  --color-primary: #e07800;
+  --color-primary-hover: #c86800;
+  --color-accent: #e03d00;
+  --color-error: #c83030;
+  color-scheme: light;
+}
