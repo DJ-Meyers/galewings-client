@@ -23,7 +23,7 @@ const emptyField: FieldConditions = {}
 const floette: ChampionsPokemon = {
   species: 'Floette-Eternal',
   nature: 'Modest',
-  ability: 'Protosynthesis',
+  ability: 'Flower Veil',
   item: 'Leftovers',
   statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
   moves: [],
@@ -121,13 +121,34 @@ describe('shouldActivateAbility', () => {
   })
 
   it('activates Protosynthesis in Sun', () => {
+    // Flutter Mane is the canonical Protosynthesis user but isn't in the
+    // current Champions regulation's species literal — cast through
+    // unknown so the type narrowing doesn't reject it.
+    const flutterMane = {
+      species: 'Flutter Mane',
+      nature: 'Timid',
+      ability: 'Protosynthesis',
+      item: 'Leftovers',
+      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
+      moves: [],
+    } as unknown as ChampionsPokemon
     expect(
-      shouldActivateAbility(floette, baseParams, { weather: 'Sun' }),
+      shouldActivateAbility(flutterMane, baseParams, { weather: 'Sun' }),
     ).toBe(true)
   })
 
   it('does NOT activate Protosynthesis outside Sun (Booster Energy disabled — see compute-damage.ts note)', () => {
-    expect(shouldActivateAbility(floette, baseParams, emptyField)).toBe(false)
+    const flutterMane = {
+      species: 'Flutter Mane',
+      nature: 'Timid',
+      ability: 'Protosynthesis',
+      item: 'Leftovers',
+      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
+      moves: [],
+    } as unknown as ChampionsPokemon
+    expect(shouldActivateAbility(flutterMane, baseParams, emptyField)).toBe(
+      false,
+    )
   })
 
   it('activates Quark Drive on Electric terrain', () => {
