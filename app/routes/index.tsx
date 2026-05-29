@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
 import { CalcRow } from '~/components/calculator/CalcRow'
+import { SpeedCalcRow } from '~/components/SpeedCalcRow'
 import { makeCalc } from '~/sandbox/defaults'
 import { SandboxProvider, useSandbox } from '~/sandbox/SandboxContext'
 
@@ -11,6 +12,7 @@ const SandboxSmokeTest = () => {
   useEffect(() => {
     if (state.calcs.length === 0) {
       dispatch({ type: 'CALC_ADD', calc: makeCalc('offensive') })
+      dispatch({ type: 'CALC_ADD', calc: makeCalc('speed') })
     }
   }, [state.calcs.length, dispatch])
 
@@ -23,7 +25,8 @@ const SandboxSmokeTest = () => {
         </p>
       </header>
       {state.calcs.map((calc) => {
-        if (calc.type === 'speed') return null
+        if (calc.type === 'speed')
+          return <SpeedCalcRow key={calc.id} calc={calc} />
         return <CalcRow key={calc.id} calc={calc} mode={calc.type} />
       })}
     </div>
