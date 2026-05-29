@@ -11,13 +11,13 @@ interface Properties {
 export const ModifierMoveSelector = ({ side }: Properties) => {
   const { move, setMove } = useModifiers(side)
   const { attackerSide } = useCalc()
-  const learnableMoves = useLearnableMoves(attackerSide.pokemon.species)
+  const { learnableMoves } = useLearnableMoves(attackerSide.pokemon.species)
 
   return (
     <ModifierFieldWrapper>
       <MoveSelectField
         className="!mb-0"
-        options={learnableMoves}
+        options={learnableMoves ?? []}
         value={move}
         onChange={setMove}
       />
