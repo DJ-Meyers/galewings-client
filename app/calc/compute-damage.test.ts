@@ -20,24 +20,35 @@ const baseParams: CalcParameters = {
 
 const emptyField: FieldConditions = {}
 
+const floette: ChampionsPokemon = {
+  species: 'Floette-Eternal',
+  nature: 'Modest',
+  ability: 'Protosynthesis',
+  item: 'Leftovers',
+  statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
+  moves: [],
+}
+
+const incineroar: ChampionsPokemon = {
+  species: 'Incineroar',
+  nature: 'Careful',
+  ability: 'Intimidate',
+  item: 'Leftovers',
+  statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
+  moves: [],
+}
+
+const basculegion: ChampionsPokemon = {
+  species: 'Basculegion',
+  nature: 'Adamant',
+  ability: 'Adaptability',
+  item: 'Leftovers',
+  statPoints: { hp: 16, atk: 32, def: 4, spa: 0, spd: 8, spe: 0 },
+  moves: [],
+}
+
 describe('computeDamage', () => {
   it('produces a non-null result for a valid attacker/defender/move', () => {
-    const floette: ChampionsPokemon = {
-      species: 'Floette-Eternal',
-      nature: 'Modest',
-      ability: 'Protosynthesis',
-      item: 'Leftovers',
-      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
-      moves: [],
-    }
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     const r = computeDamage(
       { build: floette, params: baseParams },
       { build: incineroar, params: baseParams },
@@ -52,14 +63,6 @@ describe('computeDamage', () => {
   })
 
   it('returns null for an unknown species', () => {
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     // species is intentionally invalid; the schema literal union won't
     // accept it, so cast through unknown to bypass the type narrowing.
     const fake = {
@@ -76,22 +79,6 @@ describe('computeDamage', () => {
   })
 
   it('returns null for an unknown move', () => {
-    const floette: ChampionsPokemon = {
-      species: 'Floette-Eternal',
-      nature: 'Modest',
-      ability: 'Protosynthesis',
-      item: 'Leftovers',
-      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
-      moves: [],
-    }
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     const r = computeDamage(
       { build: floette, params: baseParams },
       { build: incineroar, params: baseParams },
@@ -102,22 +89,6 @@ describe('computeDamage', () => {
   })
 
   it('routes attacker isCrit into Move construction — crit deals ≥ non-crit', () => {
-    const floette: ChampionsPokemon = {
-      species: 'Floette-Eternal',
-      nature: 'Modest',
-      ability: 'Protosynthesis',
-      item: 'Leftovers',
-      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
-      moves: [],
-    }
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     const noCrit = computeDamage(
       { build: floette, params: baseParams },
       { build: incineroar, params: baseParams },
@@ -136,22 +107,6 @@ describe('computeDamage', () => {
   })
 
   it('hardcodes gameType: Doubles — same calc still works under doubles spread reduction', () => {
-    const floette: ChampionsPokemon = {
-      species: 'Floette-Eternal',
-      nature: 'Modest',
-      ability: 'Protosynthesis',
-      item: 'Leftovers',
-      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
-      moves: [],
-    }
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     const r = computeDamage(
       { build: floette, params: baseParams },
       { build: incineroar, params: baseParams },
@@ -165,14 +120,6 @@ describe('computeDamage', () => {
 
 describe('shouldActivateAbility', () => {
   it('returns true when params.abilityOn is true', () => {
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     expect(
       shouldActivateAbility(
         incineroar,
@@ -183,54 +130,32 @@ describe('shouldActivateAbility', () => {
   })
 
   it('activates Protosynthesis in Sun', () => {
-    const floette: ChampionsPokemon = {
-      species: 'Floette-Eternal',
-      nature: 'Modest',
-      ability: 'Protosynthesis',
-      item: 'Leftovers',
-      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
-      moves: [],
-    }
     expect(
       shouldActivateAbility(floette, baseParams, { weather: 'Sun' }),
     ).toBe(true)
   })
 
   it('does NOT activate Protosynthesis outside Sun (Booster Energy disabled — see compute-damage.ts note)', () => {
-    const floette: ChampionsPokemon = {
-      species: 'Floette-Eternal',
-      nature: 'Modest',
-      ability: 'Protosynthesis',
-      item: 'Leftovers',
-      statPoints: { hp: 4, atk: 0, def: 0, spa: 32, spd: 0, spe: 24 },
-      moves: [],
-    }
     expect(shouldActivateAbility(floette, baseParams, emptyField)).toBe(false)
   })
 
   it('activates Quark Drive on Electric terrain', () => {
-    const basculegion: ChampionsPokemon = {
-      species: 'Basculegion',
-      nature: 'Adamant',
+    // basculegion is Adaptability by default; override the ability inline
+    // since this test only exercises the Paradox terrain trigger.
+    const quarkBasculegion: ChampionsPokemon = {
+      ...basculegion,
       ability: 'Quark Drive',
-      item: 'Leftovers',
-      statPoints: { hp: 16, atk: 32, def: 4, spa: 0, spd: 8, spe: 0 },
-      moves: [],
     }
     expect(
-      shouldActivateAbility(basculegion, baseParams, { terrain: 'Electric' }),
+      shouldActivateAbility(
+        quarkBasculegion,
+        baseParams,
+        { terrain: 'Electric' },
+      ),
     ).toBe(true)
   })
 
   it('respects abilityOverride for Paradox detection (Skill Swap / Trace / §2.3)', () => {
-    const incineroar: ChampionsPokemon = {
-      species: 'Incineroar',
-      nature: 'Careful',
-      ability: 'Intimidate',
-      item: 'Leftovers',
-      statPoints: { hp: 30, atk: 3, def: 12, spa: 0, spd: 17, spe: 4 },
-      moves: [],
-    }
     expect(
       shouldActivateAbility(
         incineroar,
