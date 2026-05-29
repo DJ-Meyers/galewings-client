@@ -1,9 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
-import { SandboxProvider } from '~/sandbox/SandboxContext'
+import { CalcRow } from '~/components/calculator/CalcRow'
+import { makeCalc } from '~/sandbox/defaults'
+import { SandboxProvider, useSandbox } from '~/sandbox/SandboxContext'
 
-const IndexPage = () => (
-  <SandboxProvider>
+const SandboxSmokeTest = () => {
+  const { state, dispatch } = useSandbox()
+
+  useEffect(() => {
+    if (state.calcs.length === 0) {
+      dispatch({ type: 'CALC_ADD', calc: makeCalc('offensive') })
+    }
+  }, [state.calcs.length, dispatch])
+
+  return (
     <div className="mx-auto max-w-6xl py-8">
       <header className="mb-6">
         <h1 className="text-3xl font-bold">Galewings</h1>
@@ -11,10 +22,17 @@ const IndexPage = () => (
           VGC damage calculator sandbox.
         </p>
       </header>
-      <div className="text-text-faint border-border rounded border border-dashed p-8 text-center text-sm">
-        Calculator rows will mount here as later step-10 PRs land.
-      </div>
+      {state.calcs.map((calc) => {
+        if (calc.type === 'speed') return null
+        return <CalcRow key={calc.id} calc={calc} mode={calc.type} />
+      })}
     </div>
+  )
+}
+
+const IndexPage = () => (
+  <SandboxProvider>
+    <SandboxSmokeTest />
   </SandboxProvider>
 )
 

@@ -1,21 +1,22 @@
 import { createContext } from 'react'
 
-import type { CalcSide } from '~/calc/compute-damage'
+import type { CalcSide, DamageCalcResult } from '~/calc/compute-damage'
 import type {
   CalcParameters,
   ChampionsPokemon,
   FieldConditions,
 } from '~/types'
 
-import type { CalcMode, SandboxCalc, StatBoostKey } from '~/sandbox/types'
+import type { CalcRowMode, SandboxCalc, StatBoostKey } from '~/sandbox/types'
 
 export interface CalcContextValue {
   calc: SandboxCalc
-  mode: CalcMode
+  mode: CalcRowMode
   playerSide: CalcSide
   opponentSide: CalcSide
   attackerSide: CalcSide
   defenderSide: CalcSide
+  result: DamageCalcResult | null
   onPlayerParamsUpdate: (patch: Partial<CalcParameters>) => void
   onOpponentParamsUpdate: (patch: Partial<CalcParameters>) => void
   onPlayerBoost: (stat: StatBoostKey, value: number) => void

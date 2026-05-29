@@ -7,6 +7,8 @@ import type {
 
 export type CalcMode = 'offensive' | 'defensive' | 'speed'
 
+export type CalcRowMode = Exclude<CalcMode, 'speed'>
+
 export type StatBoostKey = Exclude<StatKey, 'hp'>
 
 export interface SandboxCalc {
