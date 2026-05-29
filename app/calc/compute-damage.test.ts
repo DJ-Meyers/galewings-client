@@ -41,8 +41,8 @@ const incineroar: ChampionsPokemon = {
 describe('computeDamage', () => {
   it('produces a non-null result for a valid attacker/defender/move', () => {
     const r = computeDamage(
-      { build: floette, params: baseParams },
-      { build: incineroar, params: baseParams },
+      { pokemon: floette, params: baseParams },
+      { pokemon: incineroar, params: baseParams },
       'Moonblast',
       emptyField,
     )
@@ -61,8 +61,8 @@ describe('computeDamage', () => {
       species: 'Pikachuuuu',
     } as unknown as ChampionsPokemon
     const r = computeDamage(
-      { build: fake, params: baseParams },
-      { build: incineroar, params: baseParams },
+      { pokemon: fake, params: baseParams },
+      { pokemon: incineroar, params: baseParams },
       'Moonblast',
       emptyField,
     )
@@ -71,8 +71,8 @@ describe('computeDamage', () => {
 
   it('returns null for an unknown move', () => {
     const r = computeDamage(
-      { build: floette, params: baseParams },
-      { build: incineroar, params: baseParams },
+      { pokemon: floette, params: baseParams },
+      { pokemon: incineroar, params: baseParams },
       'Notamoveatall',
       emptyField,
     )
@@ -81,14 +81,14 @@ describe('computeDamage', () => {
 
   it('routes attacker isCrit into Move construction — crit deals ≥ non-crit', () => {
     const noCrit = computeDamage(
-      { build: floette, params: baseParams },
-      { build: incineroar, params: baseParams },
+      { pokemon: floette, params: baseParams },
+      { pokemon: incineroar, params: baseParams },
       'Moonblast',
       emptyField,
     )
     const crit = computeDamage(
-      { build: floette, params: { ...baseParams, isCrit: true } },
-      { build: incineroar, params: baseParams },
+      { pokemon: floette, params: { ...baseParams, isCrit: true } },
+      { pokemon: incineroar, params: baseParams },
       'Moonblast',
       emptyField,
     )
@@ -99,8 +99,8 @@ describe('computeDamage', () => {
 
   it('hardcodes gameType: Doubles — same calc still works under doubles spread reduction', () => {
     const r = computeDamage(
-      { build: floette, params: baseParams },
-      { build: incineroar, params: baseParams },
+      { pokemon: floette, params: baseParams },
+      { pokemon: incineroar, params: baseParams },
       'Dazzling Gleam',
       emptyField,
     )
