@@ -6,9 +6,9 @@ import { toCalcPokemon } from './championsPokemon'
 
 // Test fixtures only need to satisfy the runtime shape — the strict
 // species-keyed literal unions on ability / item / move aren't worth
-// hand-rolling for fixture builds. `unknown` escape-hatch keeps the
+// hand-rolling for fixture pokemon. `unknown` escape-hatch keeps the
 // test focused on adapter behaviour.
-const baseBuild = {
+const incineroar = {
   species: 'Incineroar',
   nature: 'Careful',
   ability: 'Intimidate',
@@ -29,13 +29,13 @@ const baseParams: CalcParameters = {
 
 describe('toCalcPokemon', () => {
   it('produces a level-50 @smogon/calc Pokemon for the given species', () => {
-    const p = toCalcPokemon(baseBuild, baseParams)
+    const p = toCalcPokemon(incineroar, baseParams)
     expect(p.species.name).toBe('Incineroar')
     expect(p.level).toBe(50)
   })
 
   it('converts statPoints to EVs via the §2.7 formula', () => {
-    const p = toCalcPokemon(baseBuild, baseParams)
+    const p = toCalcPokemon(incineroar, baseParams)
     // 30 SP → 4 + 29*8 = 236
     expect(p.evs.hp).toBe(236)
     // 3 SP → 20, 12 SP → 92, 17 SP → 132, 4 SP → 28
@@ -47,40 +47,44 @@ describe('toCalcPokemon', () => {
   })
 
   it("defaults missing ivs to a perfect spread", () => {
-    const p = toCalcPokemon(baseBuild, baseParams)
+    const p = toCalcPokemon(incineroar, baseParams)
     expect(p.ivs).toEqual({ hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 })
   })
 
   it("normalises empty-string sentinels to undefined", () => {
-    const p = toCalcPokemon(baseBuild, baseParams)
+    const p = toCalcPokemon(incineroar, baseParams)
     expect(p.teraType).toBeUndefined()
     expect(p.status).toBe('')
   })
 
   it('honours params.teraType when set', () => {
-    const p = toCalcPokemon(baseBuild, { ...baseParams, teraType: 'Ghost' })
+    const p = toCalcPokemon(incineroar, { ...baseParams, teraType: 'Ghost' })
     expect(p.teraType).toBe('Ghost')
   })
 
-  it("uses params.abilityOverride when set, else build.ability (§2.3)", () => {
-    const overridden = toCalcPokemon(baseBuild, {
+  it("uses params.abilityOverride when set, else pokemon.ability (§2.3)", () => {
+    const overridden = toCalcPokemon(incineroar, {
       ...baseParams,
       abilityOverride: 'Flash Fire',
     })
     expect(overridden.ability).toBe('Flash Fire')
 
-    const baseline = toCalcPokemon(baseBuild, baseParams)
+    const baseline = toCalcPokemon(incineroar, baseParams)
     expect(baseline.ability).toBe('Intimidate')
   })
 
   it('translates the species display alias via toSmogonName', () => {
-    const urshifu = { ...baseBuild, species: 'Urshifu-Rapid', ability: 'Unseen Fist' }
+    const urshifu = {
+      ...incineroar,
+      species: 'Urshifu-Rapid',
+      ability: 'Unseen Fist',
+    }
     const p = toCalcPokemon(urshifu as unknown as ChampionsPokemon, baseParams)
     expect(p.species.name).toBe('Urshifu-Rapid-Strike')
   })
 
   it("applies boosts as-is", () => {
-    const p = toCalcPokemon(baseBuild, {
+    const p = toCalcPokemon(incineroar, {
       ...baseParams,
       boosts: { atk: 2, def: -1, spa: 0, spd: 0, spe: 1 },
     })

@@ -6,8 +6,10 @@ import { gen, toSmogonName } from '~/data/gen'
 import type { CalcParameters, ChampionsPokemon } from '~/types'
 import { toCalcPokemon } from '~/utils/championsPokemon'
 
+// One side of a damage calc: the Pokémon row plus the per-side scenario
+// parameters (tera, boosts, status, isCrit, etc.).
 export type CalcSide = {
-  build: ChampionsPokemon
+  pokemon: ChampionsPokemon
   params: CalcParameters
 }
 
@@ -27,29 +29,29 @@ export type DamageCalcResult = {
 // (vgc-2026-m-a). When it returns, also re-enable the commented checks
 // below — the rest of the wiring stays identical.
 export const shouldActivateAbility = (
-  build: ChampionsPokemon,
+  pokemon: ChampionsPokemon,
   params: CalcParameters,
   field: FieldConditions,
 ): boolean => {
   if (params.abilityOn) return true
-  const ability = params.abilityOverride ?? build.ability
+  const ability = params.abilityOverride ?? pokemon.ability
   if (
     ability === 'Protosynthesis' &&
     field.weather === 'Sun'
-    // || build.item === 'Booster Energy'   // re-enable when item returns to legalItems
+    // || pokemon.item === 'Booster Energy'   // re-enable when item returns to legalItems
   )
     return true
   if (
     ability === 'Quark Drive' &&
     field.terrain === 'Electric'
-    // || build.item === 'Booster Energy'   // re-enable when item returns to legalItems
+    // || pokemon.item === 'Booster Energy'   // re-enable when item returns to legalItems
   )
     return true
   return false
 }
 
 // Wrapper around @smogon/calc's calculate. Plan §6.6, §7 step 9.
-// - Takes per-side build + calc parameters (D1/D2).
+// - Takes per-side Pokémon + calc parameters (D1/D2).
 // - Routes attacker isCrit into Move construction (D4/D5).
 // - Defaults boostedStat to 'auto' when Paradox is active and no
 //   explicit pick was made (matches TailRoom's behaviour).
@@ -62,17 +64,19 @@ export const computeDamage = (
   field: FieldConditions,
 ): DamageCalcResult | null => {
   try {
-    if (!gen.species.get(toID(toSmogonName(attacker.build.species)))) return null
-    if (!gen.species.get(toID(toSmogonName(defender.build.species)))) return null
+    if (!gen.species.get(toID(toSmogonName(attacker.pokemon.species))))
+      return null
+    if (!gen.species.get(toID(toSmogonName(defender.pokemon.species))))
+      return null
     if (!gen.moves.get(toID(moveName))) return null
 
     const atkAbilityOn = shouldActivateAbility(
-      attacker.build,
+      attacker.pokemon,
       attacker.params,
       field,
     )
     const defAbilityOn = shouldActivateAbility(
-      defender.build,
+      defender.pokemon,
       defender.params,
       field,
     )
@@ -92,8 +96,8 @@ export const computeDamage = (
         : '',
     }
 
-    const atkPoke = toCalcPokemon(attacker.build, atkParams)
-    const defPoke = toCalcPokemon(defender.build, defParams)
+    const atkPoke = toCalcPokemon(attacker.pokemon, atkParams)
+    const defPoke = toCalcPokemon(defender.pokemon, defParams)
 
     const move = new Move(gen, moveName, {
       isCrit: attacker.params.isCrit || undefined,
