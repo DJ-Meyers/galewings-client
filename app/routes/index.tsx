@@ -1,18 +1,21 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+
+import { SandboxProvider } from '~/sandbox/SandboxContext'
 
 const IndexPage = () => (
-  <div className="py-12 text-center">
-    <h1 className="mb-3 text-4xl font-bold">Galewings</h1>
-    <p className="text-text-muted mx-auto mb-6 max-w-[600px] text-lg">
-      A VGC damage calculator built for teambuilding.
-    </p>
-    <Link
-      className="bg-primary hover:bg-primary-hover rounded px-5 py-2 font-semibold text-white no-underline"
-      to="/teams"
-    >
-      Get Started
-    </Link>
-  </div>
+  <SandboxProvider>
+    <div className="mx-auto max-w-6xl py-8">
+      <header className="mb-6">
+        <h1 className="text-3xl font-bold">Galewings</h1>
+        <p className="text-text-muted text-sm">
+          VGC damage calculator sandbox.
+        </p>
+      </header>
+      <div className="text-text-faint border-border rounded border border-dashed p-8 text-center text-sm">
+        Calculator rows will mount here as later step-10 PRs land.
+      </div>
+    </div>
+  </SandboxProvider>
 )
 
 export const Route = createFileRoute('/')({
