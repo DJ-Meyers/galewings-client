@@ -1,35 +1,20 @@
-import { useAuth } from '@clerk/react'
-import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 
-const AuthGate = () => {
-  const { isLoaded, isSignedIn } = useAuth()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      void navigate({ to: '/sign-in' })
-    }
-  }, [isLoaded, isSignedIn, navigate])
-
-  if (!isLoaded || !isSignedIn) {
-    return null
-  }
-
-  return <Outlet />
-}
-
-const AuthenticatedLayout = () => {
-  const developmentBypass =
-    import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true'
-
-  if (developmentBypass) {
-    return <Outlet />
-  }
-
-  return <AuthGate />
-}
+const AuthenticatedLayout = () => <Outlet />
 
 export const Route = createFileRoute('/_authenticated')({
+  beforeLoad: ({ context, location }) => {
+    const developmentBypass =
+      import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true'
+    if (developmentBypass) return
+
+    if (!context.auth.isLoaded) return
+    if (!context.auth.isSignedIn) {
+      throw redirect({
+        to: '/sign-in',
+        search: { redirect: location.href },
+      })
+    }
+  },
   component: AuthenticatedLayout,
 })
