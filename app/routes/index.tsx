@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { CalcRow } from '~/components/calculator/CalcRow'
 import { SpeedCalcRow } from '~/components/SpeedCalcRow'
@@ -9,15 +9,19 @@ import type { SandboxCalc } from '~/sandbox/types'
 
 const SandboxLayout = () => {
   const { state, dispatch } = useSandbox()
+  // Ref-guarded so StrictMode's dev double-invoke of effects doesn't
+  // dispatch CALC_ADD twice per fixture before the first set has landed
+  // in state.
+  const seededRef = useRef(false)
 
   useEffect(() => {
-    if (state.calcs.length === 0) {
-      dispatch({ type: 'PLAYER_UPDATE', patch: SANDBOX_PLAYER })
-      for (const fixture of SANDBOX_FIXTURES) {
-        dispatch({ type: 'CALC_ADD', calc: fixture })
-      }
+    if (seededRef.current) return
+    seededRef.current = true
+    dispatch({ type: 'PLAYER_UPDATE', patch: SANDBOX_PLAYER })
+    for (const fixture of SANDBOX_FIXTURES) {
+      dispatch({ type: 'CALC_ADD', calc: fixture })
     }
-  }, [state.calcs.length, dispatch])
+  }, [dispatch])
 
   const offensiveCalcs = useMemo(
     () => state.calcs.filter((c) => c.type === 'offensive'),
