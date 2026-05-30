@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { formatSummary } from '~/components/calculator/CalcRow/formatSummary'
 import { FieldConditionsSection } from '~/components/calculator/FieldConditionsSection'
 import { ModifiersSection } from '~/components/calculator/ModifiersSection'
 import { PokemonInfoSection } from '~/components/calculator/PokemonInfoSection'
@@ -21,7 +22,14 @@ const pokemonIconClass =
 
 export const CalcModal = () => {
   const { calcId, mode } = useCalcRowContext()
-  const { calc, playerSide, opponentSide } = useCalcRow(calcId, mode)
+  const {
+    calc,
+    playerSide,
+    opponentSide,
+    attackerSide,
+    defenderSide,
+    result,
+  } = useCalcRow(calcId, mode)
   const { expandedId, setExpandedId } = useExpandedCalc()
   const setOpponent = useSandboxStore((s) => s.setOpponent)
   const patchCalc = useSandboxStore((s) => s.patchCalc)
@@ -86,13 +94,19 @@ export const CalcModal = () => {
   const onOpponentUpdate = (patch: Partial<ChampionsPokemon>) =>
     setOpponent(calcId, patch)
 
+  const defenderMaxHp = result?.defenderMaxHp ?? 1
+  const title = formatSummary(
+    attackerSide,
+    defenderSide,
+    mode,
+    result,
+    defenderMaxHp,
+    calc.fieldConditions,
+  )
+
   return (
     <>
-      <Modal
-        open={isOpen}
-        title={calc.name || `${topSpecies} vs ${bottomSpecies}`}
-        onClose={handleClose}
-      >
+      <Modal open={isOpen} title={title} onClose={handleClose}>
         <div className="mb-1 flex items-end gap-1 leading-none">
           <PokemonIcon className={pokemonIconClass} species={topSpecies} />
           <span className="text-text-dim text-sm font-semibold">

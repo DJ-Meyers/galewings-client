@@ -1,3 +1,4 @@
+import { formatSummary } from '~/components/calculator/CalcRow/formatSummary'
 import { FavoriteButton } from '~/components/FavoriteButton'
 import { useCalcRowContext } from '~/context/CalcRowContext'
 import { useCalcRow } from '~/hooks/calc/useCalcRow'
@@ -6,14 +7,20 @@ import { useSandboxStore } from '~/sandbox/store'
 
 export const CalcSummaryRow = () => {
   const { calcId, mode } = useCalcRowContext()
-  const { calc, result } = useCalcRow(calcId, mode)
+  const { calc, attackerSide, defenderSide, result } = useCalcRow(calcId, mode)
   const { setExpandedId } = useExpandedCalc()
   const removeCalc = useSandboxStore((s) => s.removeCalc)
   const toggleFavorite = useSandboxStore((s) => s.toggleFavorite)
 
-  const summary = result
-    ? `${result.desc} — ${result.range[0]}–${result.range[1]} HP (${result.koChance})`
-    : 'Configure attacker and defender to see damage'
+  const defenderMaxHp = result?.defenderMaxHp ?? 1
+  const summary = formatSummary(
+    attackerSide,
+    defenderSide,
+    mode,
+    result,
+    defenderMaxHp,
+    calc.fieldConditions,
+  )
 
   return (
     <div className="bg-surface mb-2 overflow-hidden rounded-md shadow-sm">
@@ -26,7 +33,7 @@ export const CalcSummaryRow = () => {
           onClick={() => toggleFavorite(calcId)}
         />
         <span
-          className={`min-w-0 flex-1 truncate text-sm ${result ? '' : 'text-text-dim italic'}`}
+          className={`min-w-0 flex-1 text-sm ${result ? '' : 'text-text-dim italic'}`}
         >
           {summary}
         </span>
