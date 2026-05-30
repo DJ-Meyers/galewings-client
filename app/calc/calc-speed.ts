@@ -35,7 +35,7 @@ export const computeEffectiveSpeed = (
     }
 
     if (pokemon.item === 'Choice Scarf') {
-      speed = Math.floor((speed * 6144) / 4096)
+      speed = Math.floor((speed * 3) / 2)
     }
 
     // Iron Ball halves speed; re-enable when the item returns to
@@ -63,7 +63,7 @@ export const computeEffectiveSpeed = (
     ) {
       const boostedStat = params.boostedStat || 'auto'
       if (boostedStat === 'spe' || boostedStat === 'auto') {
-        speed = Math.floor((speed * 6144) / 4096)
+        speed = Math.floor((speed * 3) / 2)
       }
     }
 
@@ -76,7 +76,7 @@ export const computeEffectiveSpeed = (
     }
 
     if (pokemon.ability === 'Quick Feet' && params.status) {
-      speed = Math.floor((speed * 6144) / 4096)
+      speed = Math.floor((speed * 3) / 2)
     }
 
     return Math.max(0, Math.min(10_000, speed))

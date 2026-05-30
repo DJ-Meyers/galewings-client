@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import type { CalcParameters, ChampionsPokemon, FieldConditions } from '~/types'
+import type {
+  CalcParameters,
+  ChampionsAbility,
+  ChampionsPokemon,
+  FieldConditions,
+} from '~/types'
 
 import { computeEffectiveSpeed } from './calc-speed'
 
@@ -91,13 +96,13 @@ describe('computeEffectiveSpeed', () => {
       emptyField,
       false,
     )
-    expect(scarf).toBe(Math.floor((base * 6144) / 4096))
+    expect(scarf).toBe(Math.floor((base * 3) / 2))
   })
 
   it('Chlorophyll doubles speed in Sun', () => {
     const chloropuff: ChampionsPokemon = {
       ...garchomp,
-      ability: 'Chlorophyll' as ChampionsPokemon['ability'],
+      ability: 'Chlorophyll' as ChampionsAbility,
     }
     const base = computeEffectiveSpeed(
       { pokemon: chloropuff, params: baseParams },
