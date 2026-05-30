@@ -1,5 +1,6 @@
 export type {
   CalcParameters,
+  ChampionsAbility,
   ChampionsPokemon,
   FieldConditions,
   StatKey,
